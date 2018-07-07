@@ -3,6 +3,7 @@
 var fs = require('fs'),
     path = require('path'),
     http = require('http');
+var cors = require('cors')
 
 var app = require('connect')();
 var swaggerTools = require('swagger-tools');
@@ -16,12 +17,14 @@ var options = {
   useStubs: true,
 };
 
-// The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
-var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
-var swaggerDoc = jsyaml.safeLoad(spec);
+  // The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
+  var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
+  var swaggerDoc = jsyaml.safeLoad(spec);
 
-// Initialize the Swagger middleware
-swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
+  app.use(cors());
+
+  // Initialize the Swagger middleware
+  swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
   // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
   app.use(middleware.swaggerMetadata());
